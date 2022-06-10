@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include <windows.h>
+#include <windows.h>
+#include <time.h>
 #define ORG 'X'
 #define VAZ '.'
 #define TAM 101
