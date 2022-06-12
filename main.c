@@ -25,7 +25,7 @@ void jogaJogoVida(char **mAtual, int nl, int nc, int nCiclos);
 int main()
 {
     char **mat;
-    int nl=20, nc=20, nCiclos=5;
+    int nl=20, nc=20, nCiclos=65;
     mat = alocaMatriz(nl,nc);
 
     do{
@@ -47,12 +47,12 @@ void limpaMatriz(char **m, int nl, int nc)
 char** alocaMatriz(int nl, int nc)
 {
     char **m;
-    int i, j;
+    int i;
     m = (char**)malloc(nl*sizeof(char*));
     if(m == NULL) {printf ("Erro de alocacao da matriz!!");exit (1);}
     for(i=0; i<nc; i++){
         m[i]=(char*)malloc(nc*sizeof(char));
-        if(m[j] == NULL){printf(" Erro de alocacao das linhas da matriz!");exit (1);}
+        if(m[i] == NULL){printf(" Erro de alocacao das linhas da matriz!");exit (1);}
     }
 
     return m;
@@ -88,24 +88,65 @@ void atualizaMat(char **mAtual, char **mAnt, int nl, int nc)
 {
     int i, j, vivos;
 
-    vivos=3;
+    vivos=0;
 
     // contar n� de vizinhos vivos
     for(i=0; i<nl; i++){
         for(j=0; j<nc; j++){
-            //vivos=0;
-            if(mAnt[i][j]==ORG){
-                if(vivos<2)
+            if (i > 0){
+                if(mAnt[i-1][j]==ORG){
+                    vivos++;
+                }
+            }
+            if (i < nl -1){
+                if(mAnt[i+1][j]==ORG){
+                    vivos++;
+                }
+            }
+            if (j > 0){
+                if(mAnt[i][j-1]==ORG){
+                    vivos++;
+                }
+            }
+            if (j < nc -1){
+                if(mAnt[i][j+1]==ORG){
+                    vivos++;
+                }
+            }
+            if (i > 0 && j > 0){
+                if(mAnt[i-1][j-1]==ORG){
+                    vivos++;
+                }
+            }
+            if (i > 0 && j < nc-1){
+                if(mAnt[i-1][j+1]==ORG){
+                    vivos++;
+                }
+            }
+            if (i < nl-1 && j > 0){
+                if(mAnt[i+1][j-1]==ORG){
+                    vivos++;
+                }
+            }
+            if (i < nl-1 && j < nc-1){
+                if(mAnt[i+1][j+1]==ORG){
+                    vivos++;
+                }
+            }
+            if (mAtual[i][j] == ORG){
+                if (vivos < 2 || vivos > 3){
                     mAtual[i][j] = VAZ;
-                if(vivos==2 || vivos==3)
+                }else {
                     mAtual[i][j] = ORG;
-                if(vivos>3)
+                }
+            }else {
+                if (vivos == 3)
+                    mAtual[i][j] = ORG;
+                else
                     mAtual[i][j] = VAZ;
             }
-            else{
-                if(vivos == 3)
-                    mAtual[i][j] = ORG;
-            }
+
+            vivos = 0 ;
         }
     }
 }
@@ -197,7 +238,7 @@ void jogaJogoVida(char **mAtual, int nl, int nc, int nCiclos)
     int c;
 
     //imprimindo na tela a matriz inicial
-    system("cls");
+    system("cls");a
     imprimeMatriz(mAtual,nl,nc);
     // getchar();
     Sleep(100);
@@ -209,11 +250,11 @@ void jogaJogoVida(char **mAtual, int nl, int nc, int nCiclos)
         copiaMatriz(mAnt,mAtual,nl,nc);
 
         atualizaMat(mAtual,mAnt,nl,nc);
-
+        Sleep(10);
         system("cls");
         imprimeMatriz(mAtual,nl,nc);
         // getchar();
-        Sleep(100);
+
     }
     desalocaMatriz(mAnt,nl);
 
