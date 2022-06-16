@@ -290,3 +290,5 @@ int main()
 
     desalocaMatriz(&dados_jogo);
 }
+
+test
