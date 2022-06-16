@@ -31,5 +31,3 @@ void jogaJogoVida(char **mAtual, int nl, int nc, int nCiclos);
 # else
 #  define IS_MACOS 0
 # endif
-
-#endif
