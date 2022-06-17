@@ -3,30 +3,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-// #include <unistd.h>
-// #include <windows.h>
-#include <time.h>
+
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 
 #define ORG 'X'
 #define VAZ '.'
 #define TAM 101
-
-void limpaMatriz(char **mat, int nl, int nc);
-char** alocaMatriz(int nl, int nc);
-void desalocaMatriz(char **mat, int nl);
-void imprimeMatriz(char **mat, int nl, int nc);
-void copiaMatriz(char **mAnt, char **mAtual, int nl, int nc);
-void atualizaMat(char **mAtual, char **mAnt, int nl, int nc);
-
-void inicBloco(char **m, int nl, int nc);
-void inicBlinker(char **m, int nl, int nc);
-void inicSapo(char **m, int nl, int nc);
-void inicGlider(char **m, int nl, int nc);
-void inicLWSS(char **m, int nl, int nc);
-
-void menuInicJogo(char **mat, int nl, int nc);
-void jogaJogoVida(char **mAtual, int nl, int nc, int nCiclos);
-
 typedef struct tab{
 char nomeJogo[TAM];		//o nome do jogo deve ser relativo ao padrao
 						//de inicializacao. Por exemplo, JogoSapo ou JogoBloco
@@ -36,14 +22,20 @@ char **m;				//Atenção! Essa matriz terá que ser alocada dinamicamente
 						//para que a funcao que inicializa possa funcionar
 }Tab;
 
-// # ifdef_WIN32
-// #  define IS_WIN 1
-// # else
-// #  define IS_WIN 0
-// # endif
+void limpaMatriz(Tab *dados_jogos);
+void alocaMatriz(Tab *dados_jogos);
+void desalocaMatriz(Tab *dados_jogos);
+void imprimeMatriz(Tab *dados_jogos);
+void copiaMatriz(char **mAnt, Tab *dados_jogos);
+void atualizaMat( char **mAnt,Tab *dados_jogos);
 
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <unistd.h>
+void inicBloco(Tab *dados_jogos);
+void inicBlinker(Tab *dados_jogos);
+void inicSapo(Tab *dados_jogos);
+void inicGlider(Tab *dados_jogos);
+void inicLWSS(Tab *dados_jogos);
+
+void menuInicJogo(Tab *dados_jogos);
+void jogaJogoVida(Tab *dados_jogos);
+
 #endif

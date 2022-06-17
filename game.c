@@ -9,7 +9,6 @@ void limpaMatriz(Tab *dados_jogos)
 }
 void alocaMatriz(Tab *dados_jogos)
 {
-    char **m;
     int i;
     dados_jogos->m = (char**)malloc(dados_jogos->dim1*sizeof(char*));
     if( dados_jogos->m == NULL) {printf ("Erro de alocacao da matriz!!");exit (1);}
@@ -180,6 +179,7 @@ void inicGlider(Tab *dados_jogos)
         for(j=0;j<3;j++)
             dados_jogos->m[xInic+i][yInic+j]=padrao[i][j];
 }
+
 void inicLWSS(Tab *dados_jogos)
 {
     char padrao[4][5]={{VAZ,ORG,VAZ,VAZ,ORG},{ORG,VAZ,VAZ,VAZ,VAZ},{ORG,VAZ,VAZ,VAZ,ORG},{ORG,ORG,ORG,ORG,VAZ}};
@@ -210,7 +210,8 @@ void menuInicJogo(Tab *dados_jogos)
     }
 
     imprimeMatriz(dados_jogos);
-    printf("Se inicializacao correta digite qualquer tecla para iniciar o jogo..."); while(getchar()!='\n'); getchar();
+    printf("Se inicializacao correta digite qualquer tecla para iniciar o jogo...");
+     while(getchar()!='\n') getchar();
 }
 
 void jogaJogoVida(Tab *dados_jogos)
@@ -222,7 +223,7 @@ void jogaJogoVida(Tab *dados_jogos)
     system("cls");
     imprimeMatriz(dados_jogos);
     // getchar();
-    Sleep(100);
+    sleep(100);
 
     mAnt = alocaMatrizAnterior(dados_jogos->dim1 , dados_jogos->dim2);
 
@@ -231,7 +232,7 @@ void jogaJogoVida(Tab *dados_jogos)
         copiaMatriz(mAnt,dados_jogos);
 
         atualizaMat(mAnt,dados_jogos);
-        Sleep(10);
+        sleep(10);
         system("cls");
         imprimeMatriz(dados_jogos);
         // getchar();

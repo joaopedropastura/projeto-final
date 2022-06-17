@@ -1,3 +1,5 @@
+#include "game.h"
+
 int main()
 {
     Tab dados_jogo;
