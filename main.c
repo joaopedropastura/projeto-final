@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <time.h>
+#include <conio.h>
+
 #define ORG 'X'
 #define VAZ '.'
 #define TAM 101
@@ -165,42 +167,134 @@ void atualizaMat( char **mAnt,Tab *dados_jogos)
     }
 }
 
+int numero_linhas(const char * arquivo){
+    int numero_linhas = 0;
+    char line[1025];
+    FILE *fp;
+    fp = fopen(arquivo, "r");
+    if (fp == NULL){
+        printf("Erro de arquivo\n");
+        exit(1);
+    }
+    fgets(line , 1024 , fp);
+    while (! feof (fp)){
+        fgets(line , 1024 , fp);
+        numero_linhas ++;
+    }
+    fclose(fp);
+    return numero_linhas;
+}
+
+int numero_colunas(const char * arquivo){
+    int maior  = 0, num;
+    char line[1025];
+    char *palavra;
+    char s[2] = ",";
+    FILE *fp;
+    fp = fopen(arquivo, "r");
+    if (fp == NULL){
+        printf("Erro de arquivo\n");
+        exit(1);
+    }
+    fgets(line , 1024 , fp);
+    while (! feof (fp)){
+        palavra = strtok(line, s);
+        while (palavra != NULL){
+            for (int i = 0 ; i < strlen(palavra) ; i ++){
+                if (palavra[i] >= '1' && palavra[i] <= '9'){
+                    num = palavra[i] - 48;
+                    if (maior < num)
+                        maior = num;
+                }
+            }
+            palavra = strtok(NULL, s);
+        }
+        fgets(line , 1024 , fp);
+    }
+    fclose(fp);
+    return maior;
+}
+
+char** le_arquivo(const char * arquivo , int *nl , int *nc){
+    FILE *fp;
+    int num ;
+    char line[1024+1];
+    char *palavra;
+    char s[2] = ",";
+    *nl = numero_linhas(arquivo);
+    *nc = numero_colunas(arquivo);
+    char **matriz = alocaMatrizAnterior(*nl , *nc);
+
+
+    fp = fopen(arquivo, "r");
+    if (fp == NULL){
+        printf("Erro de arquivo\n");
+        exit(1);
+    }
+    fgets(line , 1024 , fp);
+    for(int m = 0 ; m < *nl ; m ++){
+        palavra = strtok(line, s);
+        while (palavra != NULL){
+            for (int i = 0 ; i < strlen(palavra) ; i ++){
+                if (palavra[i] >= '1' && palavra[i] <= '9'){
+                    num = palavra[i] - 48;
+                    for (int j  = 0 ; j < *nc ; j++){
+                        if (j == num - 1 )
+                            matriz[m][j] = 'X';
+                        else if (matriz[m][j] != 'X')
+                            matriz[m][j] = '.';
+                    }
+                }
+            }
+            palavra = strtok(NULL, s);
+        }
+        fgets(line , 1024 , fp);
+    }
+    fclose(fp);
+
+    return matriz;
+}
+
 void inicBloco(Tab *dados_jogos)
 {
-    char padrao[2][2]={{ORG,ORG},{ORG,ORG}};
+    int nl_figura , nc_figura;
+    char **padrao = le_arquivo("Bloco.txt" , &nl_figura ,&nc_figura );
     int i, j, xInic = dados_jogos->dim1/2, yInic=dados_jogos->dim2/2;
 
     limpaMatriz(dados_jogos);
 
-    for(i=0;i<2;i++)
-        for(j=0;j<2;j++)
+    for(i=0;i<nl_figura;i++)
+        for(j=0;j<nc_figura;j++)
             (dados_jogos->m)[xInic+i][yInic+j]=padrao[i][j];
 }
 void inicBlinker(Tab *dados_jogos)
 {
-    char padrao[1][3]={{ORG,ORG,ORG}};
+    int nl_figura , nc_figura;
+    char **padrao = le_arquivo("Blinker.txt" , &nl_figura ,&nc_figura );
     int i,j, xInic = dados_jogos->dim1/2, yInic=dados_jogos->dim2/2;
 
     limpaMatriz(dados_jogos);
 
-    for(i=0;i<1;i++)
-        for(j=0;j<3;j++)
+    for(i=0;i<nl_figura;i++)
+        for(j=0;j<nc_figura;j++)
             dados_jogos->m[xInic+i][yInic+j]=padrao[i][j];
 }
 void inicSapo(Tab *dados_jogos)
 {
-    char padrao[2][4]={{VAZ,ORG,ORG,ORG},{ORG,ORG,ORG,VAZ}};
+    int nl_figura , nc_figura;
+    char **padrao = le_arquivo("Sapo.txt" , &nl_figura ,&nc_figura );
     int i,j,xInic = dados_jogos->dim1/2, yInic=dados_jogos->dim2/2;
 
     limpaMatriz(dados_jogos);
 
-    for(i=0;i<2;i++)
-        for(j=0;j<4;j++)
+    for(i=0;i<nl_figura;i++)
+        for(j=0;j<nc_figura;j++)
             dados_jogos->m[xInic+i][yInic+j]=padrao[i][j];
 }
 void inicGlider(Tab *dados_jogos)
 {
-    char padrao[3][3]={{ORG,ORG,ORG},{ORG,VAZ,VAZ},{VAZ,ORG,VAZ}};
+    int nl_figura , nc_figura;
+    char **padrao = le_arquivo("Glider.txt" , &nl_figura ,&nc_figura );
     int i,j,xInic,yInic;
 
     limpaMatriz(dados_jogos);
@@ -208,21 +302,22 @@ void inicGlider(Tab *dados_jogos)
     yInic = dados_jogos->dim2 - 4;
 
 
-    for(i=0;i<3;i++)
-        for(j=0;j<3;j++)
+    for(i=0;i<nl_figura;i++)
+        for(j=0;j<nc_figura;j++)
             dados_jogos->m[xInic+i][yInic+j]=padrao[i][j];
 }
 void inicLWSS(Tab *dados_jogos)
 {
-    char padrao[4][5]={{VAZ,ORG,VAZ,VAZ,ORG},{ORG,VAZ,VAZ,VAZ,VAZ},{ORG,VAZ,VAZ,VAZ,ORG},{ORG,ORG,ORG,ORG,VAZ}};
+    int nl_figura , nc_figura;
+    char **padrao = le_arquivo(".txt" , &nl_figura ,&nc_figura );
     int i,j,xInic,yInic;
 
     limpaMatriz(dados_jogos);
     xInic = dados_jogos->dim1 - 5;
     yInic = dados_jogos->dim2 - 6;
 
-    for(i=0;i<4;i++)
-        for(j=0;j<5;j++)
+    for(i=0;i<nl_figura;i++)
+        for(j=0;j<nc_figura;j++)
        dados_jogos->m[xInic+i][yInic+j]=padrao[i][j];
 }
 
@@ -242,7 +337,9 @@ void menuInicJogo(Tab *dados_jogos)
     }
 
     imprimeMatriz(dados_jogos);
-    printf("Se inicializacao correta digite qualquer tecla para iniciar o jogo..."); while(getchar()!='\n'); getchar();
+    printf("Se inicializacao correta digite qualquer tecla para iniciar o jogo...");
+    while(kbhit() != 1);
+    fflush(stdin);
 }
 
 void jogaJogoVida(Tab *dados_jogos)
@@ -266,7 +363,6 @@ void jogaJogoVida(Tab *dados_jogos)
         Sleep(10);
         system("cls");
         imprimeMatriz(dados_jogos);
-        // getchar();
 
     }
     desalocaMatrizAnterior(mAnt , dados_jogos->dim2);
@@ -274,17 +370,19 @@ void jogaJogoVida(Tab *dados_jogos)
 }
 int main()
 {
+    char cond;
     Tab dados_jogo;
     dados_jogo.dim1 = 20;
     dados_jogo.dim2 = 20;
     dados_jogo.ciclosVida = 65;
     alocaMatriz(&dados_jogo);
-    //imprimeMatriz(&dados_jogo);
     do{
         menuInicJogo(&dados_jogo);
         jogaJogoVida(&dados_jogo);
-        printf("\nJogar Novamente? Pressione enter\nEncerrar Programa(S)\n");
-    }while(getchar()!= 'S');
+        printf("\nJogar Novamente? Pressione enter\nEncerrar Programa(S):");
+        scanf(" %c", &cond);
+        system("cls");
+    }while(cond != 'S');
 
     desalocaMatriz(&dados_jogo);
 }
