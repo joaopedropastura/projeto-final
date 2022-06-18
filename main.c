@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <time.h>
 #include <conio.h>
+
 #define ORG 'X'
 #define VAZ '.'
 #define TAM 101
