@@ -14,13 +14,11 @@ void desalocaMatriz(char **mat, int nl);
 void imprimeMatriz(char **mat, int nl, int nc);
 void copiaMatriz(char **mAnt, char **mAtual, int nl, int nc);
 void atualizaMat(char **mAtual, char **mAnt, int nl, int nc);
-
 void inicBloco(char **m, int nl, int nc);
 void inicBlinker(char **m, int nl, int nc);
 void inicSapo(char **m, int nl, int nc);
 void inicGlider(char **m, int nl, int nc);
 void inicLWSS(char **m, int nl, int nc);
-
 void menuInicJogo(char **mat, int nl, int nc);
 void jogaJogoVida(char **mAtual, int nl, int nc, int nCiclos);
 */
